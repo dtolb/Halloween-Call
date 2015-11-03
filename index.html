@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Happy Halloween</title>
+  </head>
+  <body>
+  <style> body { background-color: #ff9900; } </style>
+    <div id='Call'>
+        <h4>Wish your friends Happy Halloween with Bandwidth!</h4>
+            <form id='myform' action = 'newCall' method="POST">
+                <label for='phonenumber'>Phone Number (format: xxx-xxx-xxxx):</label><br/>
+                <input id='phoneNumber' name='phoneNumber' type='tel' placeholder='999-888-7777' pattern='^\d{3}-\d{3}-\d{4}$' required/>
+                <input type='submit' value='Call'>
+            </form>
+    </div>
+    <div id="result"></div>
+    <script src='//code.jquery.com/jquery-1.11.1.js'></script>
+    <script>
+      var parsePhoneNumber = function (uri) {
+        var regex = /^\s*(?:\+?\s*1)?\s*\(?\s*([0-9]{3})\s*\)?\s*-?\s*([0-9]{3})\s*-?\s*([0-9]{4})\s*$/;
+        var match = regex.exec(uri);
+        if (match){
+          return "+1" + match[ 1 ] + match[ 2 ] + match[ 3 ];
+        }
+        else {
+          return null;
+        }
+      };
+      $("#myform").submit(function(e) { // intercepts the submit event
+        e.preventDefault(); // avoid to execute the actual submit of the form
+        var data = {};
+        var Form = this;
+        $.each(this.elements, function(i, v){
+          var input = $(v);
+          data[input.attr("name")] = input.val();
+          delete data["undefined"];
+        });
+        var postData = JSON.stringify(data);
+        var formURL = $(this).attr("action");
+        $.ajax({ // make an AJAX request
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: formURL,
+          dataType: "json",
+          data: postData, // serializes the form's elements
+          statusCode: {
+            201: function () {
+              $("#result").text("Calling your Friend!!");
+              $("#myform").css("display","none");
+            },
+            400: function () {
+              $("#result").text("Failure, Please Specify a Valid Phone Number");
+            }
+          }
+        });
+      });
+    </script>
+
+  </body>
+</html>

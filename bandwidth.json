@@ -1,0 +1,6 @@
+{
+	"userId": "u-c",
+	"apiToken": "t-k",
+	"apiSecret": "asdf",
+	"baseUrl": "https://123.ngrok.io" 
+}
